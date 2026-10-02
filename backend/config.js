@@ -6,7 +6,7 @@ module.exports = {
   // Your Hostinger MySQL Database Details
   // Get these from Hostinger hPanel → Databases → MySQL Databases
   mysql: {
-    host: 'localhost',     // e.g., sqlXXX.hostinger.com
+    host: '127.0.0.1',     // e.g., sqlXXX.hostinger.com
     user: 'u506903612_covia',       // e.g., u506903612_covia
     password: 'i5=dPk3K+', // Your database password
     database: 'u506903612_covia'    // e.g., u506903612_covia
