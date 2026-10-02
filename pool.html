@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Ride Group — FlightPool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-body">
+    <main class="auth-shell pool-shell">
+      <header class="auth-top">
+        <a class="back-btn" href="matches.html" aria-label="Back to matches">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M15 5l-7 7 7 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+        <a class="logo" href="index.html" aria-label="FlightPool home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="#E96A22" />
+              <path
+                d="M8.2 18.4c2.1-1.1 4.6-2.1 7.8-2.1s5.7 1 7.8 2.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M10.4 13.2c1.7-.7 3.6-1.1 5.6-1.1s3.9.4 5.6 1.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <circle cx="11.2" cy="20.6" r="1.7" fill="#fff" />
+              <circle cx="16" cy="21.2" r="1.7" fill="#fff" />
+              <circle cx="20.8" cy="20.6" r="1.7" fill="#fff" />
+              <path
+                d="M16 8.2l1.1 2.4 2.6.2-2.1 1.6.7 2.5L16 13.6l-2.3 1.3.7-2.5-2.1-1.6 2.6-.2L16 8.2z"
+                fill="#fff"
+              />
+            </svg>
+          </span>
+          <span class="logo-text">FlightPool</span>
+        </a>
+      </header>
+
+      <section class="auth-view is-active">
+        <p class="eyebrow">You're matched</p>
+        <h1>Your Ride Group</h1>
+
+        <div class="pool-status-banner pool-status-live">
+          <span class="pool-status-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8 12l3 3 5-6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <div>
+            <p class="pool-banner-title" id="pool-banner-title">Your pool is live! Looking for travelers</p>
+            <p class="pool-banner-sub" id="pool-banner-sub" hidden></p>
+          </div>
+        </div>
+
+        <div class="pool-info-card">
+          <div class="pool-info-row">
+            <span class="pool-info-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M21 15.5l-9 5-9-5 9-10 9 10z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12 22V9"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            <div>
+              <p class="pool-info-value" id="pool-flight-code">6E 123</p>
+              <p class="pool-info-label" id="pool-route">Delhi → Hyderabad</p>
+            </div>
+          </div>
+
+          <div class="pool-info-divider"></div>
+
+          <div class="pool-info-row">
+            <span class="pool-info-icon pool-info-icon-pin" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 21s-7-6.3-7-11.5a7 7 0 0 1 14 0c0 5.2-7 11.5-7 11.5z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+                <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </span>
+            <div>
+              <p class="pool-info-label">Destination area</p>
+              <p class="pool-info-value" id="pool-destination">Gachibowli</p>
+            </div>
+          </div>
+
+          <div class="pool-info-divider"></div>
+
+          <div class="pool-info-row">
+            <span class="pool-info-icon pool-info-icon-clock" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
+                <path
+                  d="M12 7v5l3.5 2"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <div>
+              <p class="pool-info-label">Arrival</p>
+              <p class="pool-info-value" id="pool-arrival">7:25 PM</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pool-travelers-head">
+          <p class="pool-travelers-count">
+            <span id="pool-count-curr">4</span> / <span id="pool-count-max">4</span> travelers
+          </p>
+          <span class="pool-otp-badge">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M8 12l3 3 5-6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            OTP verified
+          </span>
+        </div>
+
+        <div class="pool-travelers-grid" id="pool-travelers-grid">
+          <article class="traveler-card">
+            <div class="traveler-avatar">
+              <img
+                src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=south%20asian%20female%20college%20student%20smile%20portrait%20headshot%20soft%20lighting&image_size=square"
+                alt="Priya"
+              />
+            </div>
+            <div>
+              <p class="traveler-name">Priya</p>
+              <p class="traveler-verified"><em class="verified-tag">✓ Verified</em></p>
+            </div>
+          </article>
+
+          <article class="traveler-card">
+            <div class="traveler-avatar">
+              <img
+                src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=young%20indian%20male%20student%20friendly%20face%20portrait%20headshot%20natural%20light&image_size=square"
+                alt="Aman"
+              />
+            </div>
+            <div>
+              <p class="traveler-name">Aman</p>
+              <p class="traveler-verified"><em class="verified-tag">✓ Verified</em></p>
+            </div>
+          </article>
+
+          <article class="traveler-card">
+            <div class="traveler-avatar">
+              <img
+                src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=casual%20south%20asian%20male%20college%20student%20smiling%20portrait%20headshot%20bright&image_size=square"
+                alt="Rajat"
+              />
+            </div>
+            <div>
+              <p class="traveler-name">Rajat</p>
+              <p class="traveler-verified"><em class="verified-tag">✓ Verified</em></p>
+            </div>
+          </article>
+
+          <article class="traveler-card">
+            <div class="traveler-avatar">
+              <img
+                src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=young%20south%20asian%20woman%20college%20student%20friendly%20smile%20portrait%20headshot&image_size=square"
+                alt="Neha"
+              />
+            </div>
+            <div>
+              <p class="traveler-name">Neha</p>
+              <p class="traveler-verified"><em class="verified-tag">✓ Verified</em></p>
+            </div>
+          </article>
+        </div>
+
+        <button type="button" class="btn-primary auth-submit btn-submit-rounded" id="open-chat-btn">
+          Open group chat
+        </button>
+
+        <div class="pool-report-row">
+          <button type="button" class="pool-link-ghost" id="report-btn">Report user</button>
+          <span class="pool-link-sep">·</span>
+          <button type="button" class="pool-link-ghost" id="block-btn">Block user</button>
+        </div>
+
+        <button type="button" class="pool-leave-link" id="leave-pool-btn">
+          Leave Pool
+        </button>
+      </section>
+    </main>
+
+    <script src="js/pool.js"></script>
+  </body>
+</html>

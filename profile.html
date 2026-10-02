@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Verified — FlightPool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyD1qxQPZQtLTGVyvKpNOvN6UiRauRS4q_A",
+        authDomain: "covia-926bb.firebaseapp.com",
+        projectId: "covia-926bb",
+        storageBucket: "covia-926bb.firebasestorage.app",
+        messagingSenderId: "1091554629460",
+        appId: "1:1091554629460:web:16c9fa687506ab7d64dac1",
+        measurementId: "G-0XDWQTLCQV"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      window.firebaseAuth = firebase.auth();
+    </script>
+  </head>
+  <body class="auth-body">
+    <main class="auth-shell">
+      <header class="auth-top">
+        <a class="back-btn" href="verify.html" aria-label="Back to verify">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M15 5l-7 7 7 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+        <a class="logo" href="index.html" aria-label="FlightPool home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="#E96A22" />
+              <path
+                d="M8.2 18.4c2.1-1.1 4.6-2.1 7.8-2.1s5.7 1 7.8 2.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M10.4 13.2c1.7-.7 3.6-1.1 5.6-1.1s3.9.4 5.6 1.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <circle cx="11.2" cy="20.6" r="1.7" fill="#fff" />
+              <circle cx="16" cy="21.2" r="1.7" fill="#fff" />
+              <circle cx="20.8" cy="20.6" r="1.7" fill="#fff" />
+              <path
+                d="M16 8.2l1.1 2.4 2.6.2-2.1 1.6.7 2.5L16 13.6l-2.3 1.3.7-2.5-2.1-1.6 2.6-.2L16 8.2z"
+                fill="#fff"
+              />
+            </svg>
+          </span>
+          <span class="logo-text">FlightPool</span>
+        </a>
+      </header>
+
+      <section class="auth-view is-active">
+        <p class="eyebrow">Safety first</p>
+        <h1>Let&rsquo;s get you verified</h1>
+        <p class="auth-lede profile-lede">
+          A little information helps everyone travel with more confidence.
+        </p>
+
+        <form id="profile-form">
+          <label class="profile-field">
+            <span>Full name</span>
+            <input
+              id="full-name"
+              type="text"
+              inputmode="text"
+              autocomplete="name"
+              placeholder="Your full name"
+              required
+            />
+          </label>
+
+          <div class="profile-field">
+            <span class="profile-field-label">Gender</span>
+            <div class="gender-pills" role="radiogroup" aria-label="Gender">
+              <button
+                class="gender-pill"
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-gender="male"
+              >
+                Male
+              </button>
+              <button
+                class="gender-pill is-active"
+                type="button"
+                role="radio"
+                aria-checked="true"
+                data-gender="female"
+              >
+                Female
+              </button>
+              <button
+                class="gender-pill"
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-gender="prefer-not"
+              >
+                Prefer not to say
+              </button>
+            </div>
+          </div>
+
+          <div class="profile-field profile-photo-field">
+            <span class="profile-field-label">Profile photo / selfie</span>
+            <div class="avatar-wrap">
+              <div class="avatar-circle" id="avatar-circle">
+                <img
+                  src=""
+                  alt="Profile preview"
+                  id="avatar-preview"
+                />
+                <button type="button" class="avatar-edit" id="avatar-edit" aria-label="Change photo">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2.2" stroke="currentColor" stroke-width="1.7" />
+                    <circle cx="12" cy="12" r="3.3" stroke="currentColor" stroke-width="1.7" />
+                    <circle cx="17.2" cy="8.5" r="1" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
+              <input type="file" id="photo-input" accept="image/*" hidden />
+              <p class="photo-hint-primary">
+                Upload a clear, well-lit photo of yourself
+              </p>
+              <p class="photo-hint-secondary">
+                Your photo helps other travelers recognize who they&rsquo;re
+                travelling with.
+              </p>
+            </div>
+          </div>
+
+          <p class="profile-disclaimer">
+            Your information is only used to create a safer travel community.
+          </p>
+
+          <p class="field-error" id="profile-error" hidden></p>
+
+          <button class="btn-primary auth-submit btn-submit-rounded" type="submit">
+            Continue
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <script src="js/profile.js"></script>
+  </body>
+</html>

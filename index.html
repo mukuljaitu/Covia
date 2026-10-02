@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlightPool — Airport rides, made social</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <a class="logo" href="#home" aria-label="FlightPool home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="#E96A22" />
+              <path
+                d="M8.2 18.4c2.1-1.1 4.6-2.1 7.8-2.1s5.7 1 7.8 2.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M10.4 13.2c1.7-.7 3.6-1.1 5.6-1.1s3.9.4 5.6 1.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <circle cx="11.2" cy="20.6" r="1.7" fill="#fff" />
+              <circle cx="16" cy="21.2" r="1.7" fill="#fff" />
+              <circle cx="20.8" cy="20.6" r="1.7" fill="#fff" />
+              <path
+                d="M16 8.2l1.1 2.4 2.6.2-2.1 1.6.7 2.5L16 13.6l-2.3 1.3.7-2.5-2.1-1.6 2.6-.2L16 8.2z"
+                fill="#fff"
+              />
+            </svg>
+          </span>
+          <span class="logo-text">FlightPool</span>
+        </a>
+      </header>
+
+      <main id="home" class="hero">
+        <section class="hero-copy">
+          <div id="pool-status-wrap" hidden></div>
+          <p class="eyebrow">Airport rides, made social</p>
+          <h1>Travelling alone?<br />Group up.</h1>
+          <p class="lede">
+            Find people arriving around the same time and going your way. Share
+            the ride.
+          </p>
+
+          <ul class="pills" aria-label="How FlightPool works in three words">
+            <li><button class="pill" data-step="connect" type="button">Connect</button></li>
+            <li><button class="pill" data-step="group" type="button">Group up</button></li>
+            <li><button class="pill" data-step="share" type="button">Share the ride</button></li>
+          </ul>
+
+          <div class="hero-actions">
+            <a class="btn-primary" id="find-group-btn" href="signin.html">
+              Find My Group
+            </a>
+            <a class="how-link" href="#how-it-works">How it works ↓</a>
+          </div>
+
+          <article class="note">
+            <span class="note-num">01</span>
+            <div>
+              <h2>Built by students. Built for travelers.</h2>
+              <p>
+                We kept seeing people land together, head in the same direction,
+                and still pay for separate cabs. So we built a simpler way.
+              </p>
+            </div>
+          </article>
+        </section>
+
+        <figure class="hero-media">
+          <div class="photo-frame">
+            <img
+              src="images/hero.jpg"
+              alt="Traveler walking through an airport terminal with a suitcase"
+            />
+            <p class="photo-quote">
+              There are probably people landing around the same time who are
+              going your way.
+            </p>
+          </div>
+          <figcaption>
+            A student-built community for smarter airport rides.
+          </figcaption>
+        </figure>
+      </main>
+
+      <section class="how" id="how-it-works">
+        <p class="eyebrow">How it works</p>
+        <h2 class="section-title">Three steps from landing to sharing a cab.</h2>
+        <div class="steps">
+          <article class="step" id="step-connect">
+            <span class="step-num">01</span>
+            <h3>Connect</h3>
+            <p>
+              Drop your flight, arrival window, and where you’re headed. We
+              match you with travelers on the same path.
+            </p>
+          </article>
+          <article class="step" id="step-group">
+            <span class="step-num">02</span>
+            <h3>Group up</h3>
+            <p>
+              Join a small group heading your way. Chat, confirm the pickup
+              spot, and lock in a fair split.
+            </p>
+          </article>
+          <article class="step" id="step-share">
+            <span class="step-num">03</span>
+            <h3>Share the ride</h3>
+            <p>
+              Meet at arrivals, share the cab, and split the fare. Same
+              destination, one ride, less wasted money.
+            </p>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="overlay" id="overlay" hidden>
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+        <button class="sheet-close" id="close-sheet" type="button" aria-label="Close">
+          ×
+        </button>
+
+        <div class="sheet-view is-active" id="view-form">
+          <p class="eyebrow">Find my group</p>
+          <h2 id="sheet-title">Who’s landing with you?</h2>
+          <p class="sheet-lede">
+            Tell us your airport, arrival time, and destination. We’ll look for
+            people going your way.
+          </p>
+          <form id="group-form">
+            <label>
+              Airport
+              <select name="airport" required>
+                <option value="">Select airport</option>
+                <option value="DEL">DEL — Indira Gandhi International</option>
+                <option value="BOM">BOM — Chhatrapati Shivaji Maharaj</option>
+                <option value="BLR">BLR — Kempegowda International</option>
+                <option value="HYD">HYD — Rajiv Gandhi International</option>
+                <option value="MAA">MAA — Chennai International</option>
+              </select>
+            </label>
+            <label>
+              Arrival time
+              <input name="time" type="time" required value="18:40" />
+            </label>
+            <label class="span-2">
+              Going to
+              <input
+                name="destination"
+                type="text"
+                required
+                placeholder="e.g. Koramangala, Bengaluru"
+              />
+            </label>
+            <button class="btn-primary span-2" type="submit">Search groups</button>
+          </form>
+        </div>
+
+        <div class="sheet-view" id="view-results" hidden>
+          <p class="eyebrow" id="results-eyebrow">Matches nearby</p>
+          <h2 id="results-title">Groups going your way</h2>
+          <p class="sheet-lede" id="results-lede"></p>
+          <div class="groups" id="groups-list"></div>
+          <button class="btn-ghost" id="back-to-form" type="button">
+            ← Edit search
+          </button>
+        </div>
+
+        <div class="sheet-view" id="view-joined" hidden>
+          <p class="eyebrow">You’re in</p>
+          <h2 id="joined-title">Group locked</h2>
+          <p class="sheet-lede" id="joined-lede"></p>
+          <div class="joined-card" id="joined-card"></div>
+          <button class="btn-primary" id="done-join" type="button">Back to home</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
