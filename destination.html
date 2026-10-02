@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Destination — FlightPool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-body">
+    <main class="auth-shell">
+      <header class="auth-top">
+        <a class="back-btn" href="flight.html" aria-label="Back to flight details">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M15 5l-7 7 7 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+        <a class="logo" href="index.html" aria-label="FlightPool home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="#E96A22" />
+              <path
+                d="M8.2 18.4c2.1-1.1 4.6-2.1 7.8-2.1s5.7 1 7.8 2.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M10.4 13.2c1.7-.7 3.6-1.1 5.6-1.1s3.9.4 5.6 1.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <circle cx="11.2" cy="20.6" r="1.7" fill="#fff" />
+              <circle cx="16" cy="21.2" r="1.7" fill="#fff" />
+              <circle cx="20.8" cy="20.6" r="1.7" fill="#fff" />
+              <path
+                d="M16 8.2l1.1 2.4 2.6.2-2.1 1.6.7 2.5L16 13.6l-2.3 1.3.7-2.5-2.1-1.6 2.6-.2L16 8.2z"
+                fill="#fff"
+              />
+            </svg>
+          </span>
+          <span class="logo-text">FlightPool</span>
+        </a>
+      </header>
+
+      <section class="auth-view is-active">
+        <p class="eyebrow">Almost there</p>
+        <h1>Where are you going after you land?</h1>
+
+        <form id="destination-form">
+          <div class="dest-card dest-card-airport">
+            <div class="dest-card-head">
+              <span class="dest-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M21 15.5l-9 5-9-5 9-10 9 10z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12 22V9"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+              <div>
+                <p class="dest-card-label">Arrival airport</p>
+                <p class="dest-card-value" id="airport-name">Hyderabad International Airport</p>
+              </div>
+            </div>
+            <p class="dest-auto-detected">
+              <span class="auto-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M8.3 12.3l2.4 2.4 5.2-5.3"
+                    stroke="currentColor"
+                    stroke-width="1.9"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              Automatically detected
+            </p>
+          </div>
+
+          <label class="dest-field">
+            <span class="dest-field-label">
+              <span class="dest-icon dest-icon-pin" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 21s-7-6.3-7-11.5a7 7 0 0 1 14 0c0 5.2-7 11.5-7 11.5z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+                  <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.7" />
+                </svg>
+              </span>
+              Your destination
+            </span>
+            <input
+              id="destination-input"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              placeholder="Gachibowli"
+              required
+            />
+          </label>
+
+          <p class="dest-suggestions">
+            Try: <button type="button" class="suggestion-chip" data-suggest="Gachibowli">Gachibowli</button> &middot;
+            <button type="button" class="suggestion-chip" data-suggest="Hitech City">Hitech City</button> &middot;
+            <button type="button" class="suggestion-chip" data-suggest="Madhapur">Madhapur</button> &middot;
+            <button type="button" class="suggestion-chip" data-suggest="Kondapur">Kondapur</button> &middot;
+            <button type="button" class="suggestion-chip" data-suggest="Financial District">Financial District</button>
+          </p>
+
+          <div class="privacy-note">
+            <p>
+              For privacy, other travelers only see your approximate area
+              before you join a pool &mdash; never your exact address.
+            </p>
+          </div>
+
+          <p class="field-error" id="dest-error" hidden></p>
+
+          <button
+            class="btn-primary auth-submit btn-submit-rounded"
+            type="submit"
+          >
+            Find my group
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <script src="js/destination.js"></script>
+  </body>
+</html>

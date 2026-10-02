@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flight Details — FlightPool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-body">
+    <main class="auth-shell">
+      <header class="auth-top">
+        <a class="back-btn" href="profile.html" aria-label="Back to profile">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M15 5l-7 7 7 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+        <a class="logo" href="index.html" aria-label="FlightPool home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="#E96A22" />
+              <path
+                d="M8.2 18.4c2.1-1.1 4.6-2.1 7.8-2.1s5.7 1 7.8 2.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M10.4 13.2c1.7-.7 3.6-1.1 5.6-1.1s3.9.4 5.6 1.1"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <circle cx="11.2" cy="20.6" r="1.7" fill="#fff" />
+              <circle cx="16" cy="21.2" r="1.7" fill="#fff" />
+              <circle cx="20.8" cy="20.6" r="1.7" fill="#fff" />
+              <path
+                d="M16 8.2l1.1 2.4 2.6.2-2.1 1.6.7 2.5L16 13.6l-2.3 1.3.7-2.5-2.1-1.6 2.6-.2L16 8.2z"
+                fill="#fff"
+              />
+            </svg>
+          </span>
+          <span class="logo-text">FlightPool</span>
+        </a>
+      </header>
+
+      <section class="auth-view is-active">
+        <p class="eyebrow">Flight details</p>
+        <h1>What&rsquo;s your flight number?</h1>
+
+        <form id="flight-form">
+          <label class="flight-field">
+            <input
+              id="flight-number"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              placeholder="E 123"
+              required
+            />
+          </label>
+
+          <div class="flight-result" id="flight-result" hidden>
+            <div class="flight-result-head">
+              <span class="check-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.6" />
+                  <path
+                    d="M8.3 12.3l2.4 2.4 5.2-5.3"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <div class="flight-result-title">
+                <p class="flight-status-label">Flight found</p>
+                <p class="flight-status-code" id="fr-code">GE 123</p>
+              </div>
+            </div>
+            <p class="flight-route" id="fr-route">Delhi &rarr; Hyderabad</p>
+            <p class="flight-arrival" id="fr-arrival">Arrival: 7:25 PM &middot; 21 Sep</p>
+          </div>
+
+          <button
+            type="button"
+            class="change-flight-link"
+            id="change-flight-btn"
+            hidden
+          >
+            Change flight
+          </button>
+
+          <p class="field-error" id="flight-error" hidden></p>
+
+          <button
+            class="btn-primary auth-submit btn-submit-rounded"
+            id="flight-submit"
+            type="submit"
+          >
+            Continue
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <script src="js/flight.js"></script>
+  </body>
+</html>

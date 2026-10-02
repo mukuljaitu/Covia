@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify — FlightPool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyD1qxQPZQtLTGVyvKpNOvN6UiRauRS4q_A",
+        authDomain: "covia-926bb.firebaseapp.com",
+        projectId: "covia-926bb",
+        storageBucket: "covia-926bb.firebasestorage.app",
+        messagingSenderId: "1091554629460",
+        appId: "1:1091554629460:web:16c9fa687506ab7d64dac1",
+        measurementId: "G-0XDWQTLCQV"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      window.firebaseAuth = firebase.auth();
+    </script>
+</head>
+
+<body class="auth-body">
+    <main class="auth-shell">
+        <header class="auth-top">
+            <a class="back-btn" href="signin.html" aria-label="Back to sign in">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </a>
+            <a class="logo" href="index.html" aria-label="FlightPool home">
+                <span class="logo-mark" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="#E96A22" />
+                        <path d="M8.2 18.4c2.1-1.1 4.6-2.1 7.8-2.1s5.7 1 7.8 2.1" stroke="#fff" stroke-width="2"
+                            stroke-linecap="round" />
+                        <path d="M10.4 13.2c1.7-.7 3.6-1.1 5.6-1.1s3.9.4 5.6 1.1" stroke="#fff" stroke-width="2"
+                            stroke-linecap="round" />
+                        <circle cx="11.2" cy="20.6" r="1.7" fill="#fff" />
+                        <circle cx="16" cy="21.2" r="1.7" fill="#fff" />
+                        <circle cx="20.8" cy="20.6" r="1.7" fill="#fff" />
+                        <path d="M16 8.2l1.1 2.4 2.6.2-2.1 1.6.7 2.5L16 13.6l-2.3 1.3.7-2.5-2.1-1.6 2.6-.2L16 8.2z"
+                            fill="#fff" />
+                    </svg>
+                </span>
+                <span class="logo-text">FlightPool</span>
+            </a>
+        </header>
+
+        <section class="auth-view is-active">
+            <p class="eyebrow">One quick check</p>
+            <h1>Verify your number</h1>
+            <p class="auth-lede" id="verify-lede">
+                Enter the 6-digit OTP sent to +91 XXXXX XXXXX
+            </p>
+
+            <form id="verify-form">
+                <div class="otp-and-resend-row">
+                    <div class="otp-row otp-row-rounded" id="verify-otp-row">
+                        <input class="otp-box otp-box-rounded" inputmode="numeric" maxlength="1" aria-label="Digit 1" />
+                        <input class="otp-box otp-box-rounded" inputmode="numeric" maxlength="1" aria-label="Digit 2" />
+                        <input class="otp-box otp-box-rounded" inputmode="numeric" maxlength="1" aria-label="Digit 3" />
+                        <input class="otp-box otp-box-rounded" inputmode="numeric" maxlength="1" aria-label="Digit 4" />
+                        <input class="otp-box otp-box-rounded" inputmode="numeric" maxlength="1" aria-label="Digit 5" />
+                        <input class="otp-box otp-box-rounded" inputmode="numeric" maxlength="1" aria-label="Digit 6" />
+                    </div>
+                    <div class="resend-section">
+                        <p class="resend-countdown">Resend in <span id="countdown">24</span>s</p>
+                        <button class="resend-link" id="resend-otp-btn" type="button" disabled>
+                            Resend OTP
+                        </button>
+                    </div>
+                </div>
+                <p class="field-error" id="verify-error" hidden></p>
+
+                <button class="btn-primary auth-submit btn-submit-rounded" type="submit">
+                    Verify
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/verify.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Group Chat — FlightPool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-body chat-body">
+    <div class="chat-shell">
+      <header class="chat-header">
+        <a class="back-btn back-btn-chat" href="pool.html" aria-label="Back to pool">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M15 5l-7 7 7 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+        <div class="chat-head-info">
+          <div class="chat-avatar-group" aria-hidden="true">
+            <img
+              src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=south%20asian%20female%20college%20student%20smile%20portrait%20headshot%20soft%20lighting&image_size=square"
+              alt=""
+            />
+          </div>
+          <div>
+            <p class="chat-title" id="chat-title">Gachibowli Ride Group</p>
+            <p class="chat-subtitle"><span id="chat-count">4</span> travelers · <span id="chat-flight">6E 123</span></p>
+          </div>
+        </div>
+      </header>
+
+      <div class="chat-body-scroll">
+        <p class="chat-safety-note">
+          Keep personal details private until you're comfortable. Meet in a busy pickup area.
+        </p>
+
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg msg-other">
+            <div class="msg-bubble msg-bubble-other">
+              <p class="msg-text">Hey everyone! Landing around 7:25.</p>
+            </div>
+            <p class="msg-time">7:20 PM</p>
+          </div>
+
+          <div class="msg msg-me">
+            <div class="msg-bubble msg-bubble-me">
+              <p class="msg-text">I'm collecting my baggage now.</p>
+            </div>
+            <p class="msg-time">7:30 PM</p>
+          </div>
+
+          <div class="msg msg-other">
+            <div class="msg-bubble msg-bubble-other">
+              <p class="msg-text">I'm at Exit 4.</p>
+            </div>
+            <p class="msg-time">7:36 PM</p>
+          </div>
+
+          <div class="msg msg-other">
+            <div class="msg-bubble msg-bubble-other">
+              <p class="msg-text">Should we book an Uber XL?</p>
+            </div>
+            <p class="msg-time">7:39 PM</p>
+          </div>
+        </div>
+
+        <div class="chat-quick-row" id="chat-quick-row">
+          <button type="button" class="chat-quick-chip" data-quick="I'm at pickup">
+            <span class="chat-quick-icon" aria-hidden="true">📍</span>
+            I'm at pickup
+          </button>
+          <button type="button" class="chat-quick-chip" data-quick="Bags collected">
+            <span class="chat-quick-icon" aria-hidden="true">🧳</span>
+            Bags collected
+          </button>
+          <button type="button" class="chat-quick-chip" data-quick="5 mins away">
+            <span class="chat-quick-icon" aria-hidden="true">⏳</span>
+            5 mins away
+          </button>
+          <button type="button" class="chat-quick-chip" data-quick="Ready to book">
+            <span class="chat-quick-icon" aria-hidden="true">🚕</span>
+            Ready to book
+          </button>
+        </div>
+
+        <div class="cab-booking-card">
+          <p class="cab-book-title">Book your cab</p>
+          <p class="cab-book-sub">
+            We'll take you to your preferred cab service. Your group can coordinate and book the ride yourselves.
+          </p>
+          <div class="cab-options">
+            <button type="button" class="cab-opt" data-cab="Uber">Uber</button>
+            <button type="button" class="cab-opt" data-cab="Ola">Ola</button>
+            <button type="button" class="cab-opt" data-cab="Rapido">Rapido</button>
+          </div>
+        </div>
+
+        <div class="chat-bottom-spacer"></div>
+      </div>
+
+      <footer class="chat-composer">
+        <form id="chat-form" class="chat-form">
+          <input
+            type="text"
+            id="chat-input"
+            class="chat-input"
+            placeholder="Message the group"
+            autocomplete="off"
+          />
+          <button type="submit" class="chat-send-btn" aria-label="Send message">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M4 12l16-8-5 17-3-7-8-2z"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </form>
+      </footer>
+    </div>
+
+    <script src="js/chat.js"></script>
+  </body>
+</html>
