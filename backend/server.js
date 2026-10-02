@@ -173,8 +173,15 @@ app.get('/api/health', (req, res) => {
 // Serve static files from parent directory
 app.use(express.static(path.join(__dirname, '..')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+// Catch-all route to serve HTML files
+app.get('*', (req, res) => {
+  // If the request is for a file with an extension, try to serve it
+  if (path.extname(req.path)) {
+    res.sendFile(path.join(__dirname, '..', req.path));
+  } else {
+    // Otherwise serve index.html (for SPA-like behavior)
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
+  }
 });
 
 // Start server
