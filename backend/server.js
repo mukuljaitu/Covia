@@ -5,12 +5,19 @@ const admin = require('firebase-admin');
 const path = require('path');
 const config = require('./config');
 
-// Initialize Firebase Admin
-const serviceAccount = require('./covia-926bb-firebase-adminsdk-fbsvc-cd0a35e2ba.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+// Initialize Firebase Admin with error handling
+let firebaseInitialized = false;
+try {
+  const serviceAccount = require('./covia-926bb-firebase-adminsdk-fbsvc-cd0a35e2ba.json');
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+  firebaseInitialized = true;
+  console.log('✅ Firebase Admin initialized');
+} catch (error) {
+  console.error('⚠️  Firebase initialization failed:', error.message);
+  console.log('⚠️  Server will continue running but Firebase features will be disabled');
+}
 
 const app = express();
 const PORT = config.port;
@@ -49,6 +56,10 @@ pool.getConnection()
 
 // Verify Firebase ID Token
 app.post('/api/auth/verify-token', async (req, res) => {
+  if (!firebaseInitialized) {
+    return res.status(503).json({ error: 'Firebase not initialized' });
+  }
+
   try {
     const { idToken } = req.body;
 
@@ -58,7 +69,7 @@ app.post('/api/auth/verify-token', async (req, res) => {
 
     // Verify the ID token
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    
+
     res.json({
       success: true,
       uid: decodedToken.uid,
@@ -167,25 +178,42 @@ app.get('/api/users/profile/:uid', async (req, res) => {
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', firebase: 'connected', mysql: 'connected' });
+  res.json({
+    status: 'ok',
+    firebase: firebaseInitialized ? 'connected' : 'disabled',
+    mysql: 'connected'
+  });
 });
 
-// Serve static files from parent directory
-app.use(express.static(path.join(__dirname, '..')));
+// Serve static files from parent directory (must come before catch-all)
+app.use(express.static(path.join(__dirname, '..'), {
+  index: 'index.html',
+  fallthrough: true
+}));
 
-// Catch-all route to serve HTML files
+// Catch-all route for SPA-like behavior (only if no file found)
 app.get('*', (req, res) => {
-  // If the request is for a file with an extension, try to serve it
-  if (path.extname(req.path)) {
-    res.sendFile(path.join(__dirname, '..', req.path));
-  } else {
-    // Otherwise serve index.html (for SPA-like behavior)
-    res.sendFile(path.join(__dirname, '..', 'index.html'));
-  }
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+// Start server with error handling
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📁 Serving static files from: ${path.join(__dirname, '..')}`);
+  console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
+}).on('error', (err) => {
+  console.error('❌ Server failed to start:', err.message);
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use`);
+  }
+  process.exit(1);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
 });
