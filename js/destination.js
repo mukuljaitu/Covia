@@ -68,6 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
             sessionStorage.setItem("flightpoolUser", JSON.stringify(userProfile));
         } catch (e) { }
 
-        window.location.href = "matches.html";
+        window.location.href = "matches";
     });
 });

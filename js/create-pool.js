@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.setItem("flightpoolUser", JSON.stringify(userProfile));
       } catch (e) { }
 
-      window.location.href = "pool.html";
+      window.location.href = "pool";
     }, 500);
   });
 });

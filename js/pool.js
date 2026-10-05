@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
     openChatBtn.disabled = true;
     openChatBtn.style.opacity = "0.75";
     setTimeout(function () {
-      window.location.href = "chat.html";
+      window.location.href = "chat";
     }, 350);
   });
 
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
       delete p.createdPool;
       sessionStorage.setItem("flightpoolUser", JSON.stringify(p));
     } catch (e) {}
-    window.location.href = "matches.html";
+    window.location.href = "matches";
   });
 
   reportBtn.addEventListener("click", function () {

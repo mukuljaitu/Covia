@@ -155,7 +155,7 @@ signinForm.addEventListener("submit", async (event) => {
         "flightpoolPendingAuth",
         JSON.stringify({ method: "phone", contact: phoneNumber, displayContact })
       );
-      window.location.href = "verify.html";
+      window.location.href = "verify";
     } else {
       await sendEmailOTP(value);
 
@@ -164,7 +164,7 @@ signinForm.addEventListener("submit", async (event) => {
         "flightpoolPendingAuth",
         JSON.stringify({ method: "email", contact: value, displayContact: value })
       );
-      window.location.href = "verify.html";
+      window.location.href = "verify";
     }
   } catch (error) {
     showError(signinError, error.message || "Failed to send OTP. Please try again.");

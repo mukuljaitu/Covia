@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       sessionStorage.setItem("flightpoolUser", JSON.stringify(authData));
       sessionStorage.removeItem("flightpoolPendingAuth");
-      window.location.href = "profile.html";
+      window.location.href = "profile";
     } catch (error) {
       let errorMessage = "Invalid OTP. Please try again.";
       if (error.code === 'auth/invalid-verification-code') {
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
     startCountdown();
 
     // Redirect back to signin to resend OTP
-    window.location.href = "signin.html";
+    window.location.href = "signin";
   });
 
   if (otpBoxes[0]) otpBoxes[0].focus();

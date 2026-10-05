@@ -67,12 +67,12 @@ document.addEventListener("DOMContentLoaded", function () {
           userProfile.joinedPool = poolId;
           sessionStorage.setItem("flightpoolUser", JSON.stringify(userProfile));
         } catch (e) { }
-        window.location.href = "pool.html";
+        window.location.href = "pool";
       }, 450);
     });
   });
 
   createOwnBtn.addEventListener("click", function () {
-    window.location.href = "create-pool.html";
+    window.location.href = "create-pool";
   });
 });

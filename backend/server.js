@@ -348,6 +348,22 @@ app.use(express.static(path.join(__dirname, '..'), {
   fallthrough: true
 }));
 
+// Clean URL middleware - remove .html extension
+app.use((req, res, next) => {
+  if (req.path.endsWith('.html')) {
+    // If someone tries to access /page.html, redirect to /page
+    const cleanPath = req.path.slice(0, -5);
+    return res.redirect(301, cleanPath);
+  }
+  next();
+});
+
+// Handle clean URLs (serve .html files without extension)
+app.get(/^\/(signin|verify|profile|flight|destination|pool|matches|create-pool|chat|index)$/, (req, res) => {
+  const page = req.path.slice(1); // Remove leading slash
+  res.sendFile(path.join(__dirname, '..', `${page}.html`));
+});
+
 // Catch-all route for SPA-like behavior (only if no file found)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));

@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!firebaseUser || !firebaseUser.uid) {
       showError(profileError, "Authentication required. Please sign in again.");
       setTimeout(() => {
-        window.location.href = "signin.html";
+        window.location.href = "signin";
       }, 2000);
       return;
     }
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
       profile.photoDataUrl = avatarPreview.src;
       sessionStorage.setItem("flightpoolUser", JSON.stringify(profile));
 
-      window.location.href = "flight.html";
+      window.location.href = "flight";
     } catch (error) {
       showError(profileError, error.message || "Failed to save profile. Please try again.");
       const submitBtn = profileForm.querySelector('.auth-submit');

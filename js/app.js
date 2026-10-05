@@ -79,7 +79,7 @@ function renderPoolStatus(userProfile) {
         <h3 class="pool-status-title">Almost there</h3>
         <p class="pool-status-sub">${bits.join(" · ")}</p>
         <div class="pool-status-actions">
-          <a class="pool-status-btn pool-status-btn-primary" href="matches.html">
+          <a class="pool-status-btn pool-status-btn-primary" href="matches">
             View matches
           </a>
         </div>
@@ -125,7 +125,7 @@ function renderPoolStatus(userProfile) {
   const continueBtn = document.getElementById("ps-continue");
   if (continueBtn) {
     continueBtn.addEventListener("click", function () {
-      window.location.href = "matches.html";
+      window.location.href = "matches";
     });
   }
 
