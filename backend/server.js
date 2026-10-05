@@ -48,16 +48,22 @@ const otpStore = new Map();
 // Email transporter setup
 let emailTransporter = null;
 try {
-  emailTransporter = nodemailer.createTransport({
-    service: config.email.service,
-    auth: {
-      user: config.email.user,
-      pass: config.email.pass
-    }
-  });
-  console.log('✅ Email transporter initialized');
+  // Only initialize if email config is properly set
+  if (config.email && config.email.user && config.email.pass && config.email.user !== 'your-email@gmail.com') {
+    emailTransporter = nodemailer.createTransport({
+      service: config.email.service,
+      auth: {
+        user: config.email.user,
+        pass: config.email.pass
+      }
+    });
+    console.log('✅ Email transporter initialized');
+  } else {
+    console.log('⚠️  Email service not configured - email OTP will be disabled');
+  }
 } catch (error) {
   console.error('⚠️  Email transporter initialization failed:', error.message);
+  console.log('⚠️  Email OTP will be disabled');
 }
 
 // Generate 6-digit OTP
@@ -361,12 +367,24 @@ app.use((req, res, next) => {
 // Handle clean URLs (serve .html files without extension)
 app.get(/^\/(signin|verify|profile|flight|destination|pool|matches|create-pool|chat|index)$/, (req, res) => {
   const page = req.path.slice(1); // Remove leading slash
-  res.sendFile(path.join(__dirname, '..', `${page}.html`));
+  const filePath = path.join(__dirname, '..', `${page}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error(`Error serving ${filePath}:`, err);
+      res.status(404).send('Page not found');
+    }
+  });
 });
 
 // Catch-all route for SPA-like behavior (only if no file found)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  const indexPath = path.join(__dirname, '..', 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error(`Error serving index.html:`, err);
+      res.status(500).send('Server error');
+    }
+  });
 });
 
 // Start server with error handling

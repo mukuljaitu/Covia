@@ -14,6 +14,7 @@ module.exports = {
 
   // Email configuration for OTP sending
   // Use Gmail or your preferred email service
+  // This is optional - if not configured, email OTP will be disabled
   email: {
     service: process.env.EMAIL_SERVICE || 'gmail',
     user: process.env.EMAIL_USER || 'your-email@gmail.com',
