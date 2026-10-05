@@ -12,6 +12,14 @@ module.exports = {
     database: process.env.MYSQL_DATABASE || 'u506903612_covia'    // e.g., u506903612_covia
   },
 
+  // Email configuration for OTP sending
+  // Use Gmail or your preferred email service
+  email: {
+    service: process.env.EMAIL_SERVICE || 'gmail',
+    user: process.env.EMAIL_USER || 'your-email@gmail.com',
+    pass: process.env.EMAIL_PASS || 'your-app-password'
+  },
+
   // Server Port (Hostinger usually provides this via environment variable)
   port: process.env.PORT || 3000
 };

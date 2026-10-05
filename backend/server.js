@@ -4,6 +4,7 @@ const mysql = require('mysql2/promise');
 const admin = require('firebase-admin');
 const path = require('path');
 const config = require('./config');
+const nodemailer = require('nodemailer');
 
 // Initialize Firebase Admin with error handling
 let firebaseInitialized = false;
@@ -40,6 +41,29 @@ const dbConfig = {
 
 // Create MySQL connection pool
 const pool = mysql.createPool(dbConfig);
+
+// In-memory OTP storage (use Redis in production)
+const otpStore = new Map();
+
+// Email transporter setup
+let emailTransporter = null;
+try {
+  emailTransporter = nodemailer.createTransport({
+    service: config.email.service,
+    auth: {
+      user: config.email.user,
+      pass: config.email.pass
+    }
+  });
+  console.log('✅ Email transporter initialized');
+} catch (error) {
+  console.error('⚠️  Email transporter initialization failed:', error.message);
+}
+
+// Generate 6-digit OTP
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
 // Test database connection
 pool.getConnection()
@@ -181,8 +205,141 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     firebase: firebaseInitialized ? 'connected' : 'disabled',
-    mysql: 'connected'
+    mysql: 'connected',
+    email: emailTransporter ? 'connected' : 'disabled'
   });
+});
+
+// Send Email OTP
+app.post('/api/auth/send-email-otp', async (req, res) => {
+  if (!emailTransporter) {
+    return res.status(503).json({ error: 'Email service not configured' });
+  }
+
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    // Generate OTP
+    const otp = generateOTP();
+
+    // Store OTP with 5-minute expiry
+    otpStore.set(email, {
+      otp: otp,
+      expiresAt: Date.now() + 5 * 60 * 1000 // 5 minutes
+    });
+
+    // Send email
+    const mailOptions = {
+      from: config.email.user,
+      to: email,
+      subject: 'FlightPool - Verify your email',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #E96A22;">Welcome to FlightPool!</h2>
+          <p>Your verification code is:</p>
+          <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 5px; margin: 20px 0;">
+            ${otp}
+          </div>
+          <p>This code will expire in 5 minutes.</p>
+          <p>If you didn't request this code, please ignore this email.</p>
+        </div>
+      `
+    };
+
+    await emailTransporter.sendMail(mailOptions);
+
+    res.json({
+      success: true,
+      message: 'OTP sent successfully'
+    });
+  } catch (error) {
+    console.error('Send email OTP error:', error);
+    res.status(500).json({ error: 'Failed to send OTP. Please try again.' });
+  }
+});
+
+// Verify Email OTP
+app.post('/api/auth/verify-email-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ error: 'Email and OTP are required' });
+    }
+
+    // Check if OTP exists and is valid
+    const storedData = otpStore.get(email);
+
+    if (!storedData) {
+      return res.status(400).json({ error: 'OTP not found or expired' });
+    }
+
+    // Check if OTP has expired
+    if (Date.now() > storedData.expiresAt) {
+      otpStore.delete(email);
+      return res.status(400).json({ error: 'OTP has expired' });
+    }
+
+    // Verify OTP
+    if (storedData.otp !== otp) {
+      return res.status(400).json({ error: 'Invalid OTP' });
+    }
+
+    // OTP is valid - create or get Firebase user
+    if (!firebaseInitialized) {
+      return res.status(503).json({ error: 'Firebase not initialized' });
+    }
+
+    // Create Firebase user with email (using email/password auth)
+    try {
+      // Check if user already exists
+      let userRecord;
+      try {
+        userRecord = await admin.auth().getUserByEmail(email);
+      } catch (error) {
+        if (error.code === 'auth/user-not-found') {
+          // Create new user
+          const randomPassword = Math.random().toString(36).slice(-8);
+          userRecord = await admin.auth().createUser({
+            email: email,
+            password: randomPassword,
+            emailVerified: true
+          });
+        } else {
+          throw error;
+        }
+      }
+
+      // Generate custom token for client
+      const customToken = await admin.auth().createCustomToken(userRecord.uid);
+
+      // Clear OTP after successful verification
+      otpStore.delete(email);
+
+      res.json({
+        success: true,
+        uid: userRecord.uid,
+        email: userRecord.email,
+        customToken: customToken
+      });
+    } catch (firebaseError) {
+      console.error('Firebase user creation error:', firebaseError);
+      res.status(500).json({ error: 'Failed to create user account' });
+    }
+  } catch (error) {
+    console.error('Verify email OTP error:', error);
+    res.status(500).json({ error: 'Failed to verify OTP' });
+  }
 });
 
 // Serve static files from parent directory (must come before catch-all)

@@ -77,8 +77,12 @@ async function sendPhoneOTP(phoneNumber) {
 
     // Send OTP
     const confirmationResult = await auth.signInWithPhoneNumber(phoneNumber, window.firebaseRecaptchaVerifier);
+
+    // Store confirmationResult globally - this should persist if we don't reload the page
+    // However, if we navigate to a new page, we'll lose it
+    // For now, store it and hope it persists
     window.confirmationResult = confirmationResult;
-    
+
     return true;
   } catch (error) {
     console.error("Phone OTP error:", error);
@@ -92,10 +96,26 @@ async function sendPhoneOTP(phoneNumber) {
 }
 
 async function sendEmailOTP(email) {
-  // Firebase doesn't have built-in email OTP like phone OTP
-  // For now, we'll use email/password authentication
-  // You can implement custom email OTP via your backend if needed
-  throw new Error("Email OTP requires custom implementation. Please use phone number for now.");
+  try {
+    const response = await fetch('/api/auth/send-email-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send email OTP');
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Email OTP error:", error);
+    throw error;
+  }
 }
 
 signinForm.addEventListener("submit", async (event) => {
@@ -127,9 +147,9 @@ signinForm.addEventListener("submit", async (event) => {
       // Format phone number for Firebase (must include country code)
       const digits = value.replace(/\D/g, "");
       const phoneNumber = digits.length === 10 ? `+91${digits}` : `+${digits}`;
-      
+
       await sendPhoneOTP(phoneNumber);
-      
+
       const displayContact = maskPhone(value);
       sessionStorage.setItem(
         "flightpoolPendingAuth",
@@ -138,6 +158,13 @@ signinForm.addEventListener("submit", async (event) => {
       window.location.href = "verify.html";
     } else {
       await sendEmailOTP(value);
+
+      // Store email OTP session data
+      sessionStorage.setItem(
+        "flightpoolPendingAuth",
+        JSON.stringify({ method: "email", contact: value, displayContact: value })
+      );
+      window.location.href = "verify.html";
     }
   } catch (error) {
     showError(signinError, error.message || "Failed to send OTP. Please try again.");
