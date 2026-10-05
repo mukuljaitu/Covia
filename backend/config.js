@@ -15,10 +15,12 @@ module.exports = {
   // Email configuration for OTP sending
   // Use Gmail or your preferred email service
   // This is optional - if not configured, email OTP will be disabled
+  // For Gmail: You need to generate an App Password from Google Account settings
+  // Go to: https://myaccount.google.com/security -> 2-Step Verification -> App Passwords
   email: {
     service: process.env.EMAIL_SERVICE || 'gmail',
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASS || 'your-app-password'
+    user: process.env.EMAIL_USER || 'mukulgarg334@gmail.com',
+    pass: process.env.EMAIL_PASS || 'your-gmail-app-password-here'
   },
 
   // Server Port (Hostinger usually provides this via environment variable)
