@@ -44,27 +44,6 @@ const pool = mysql.createPool(dbConfig);
 // In-memory OTP storage (use Redis in production)
 const otpStore = new Map();
 
-// Email transporter setup
-let emailTransporter = null;
-try {
-  // Only initialize if email config is properly set
-  if (config.email && config.email.user && config.email.pass && config.email.user !== 'your-email@gmail.com') {
-    emailTransporter = nodemailer.createTransport({
-      service: config.email.service,
-      auth: {
-        user: config.email.user,
-        pass: config.email.pass
-      }
-    });
-    console.log('✅ Email transporter initialized');
-  } else {
-    console.log('⚠️  Email service not configured - email OTP will be disabled');
-  }
-} catch (error) {
-  console.error('⚠️  Email transporter initialization failed:', error.message);
-  console.log('⚠️  Email OTP will be disabled');
-}
-
 // Generate 6-digit OTP
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -83,7 +62,7 @@ try {
 if (nodemailer) {
   try {
     // Only initialize if email config is properly set
-    if (config.email && config.email.user && config.email.pass && config.email.user !== 'your-email@gmail.com') {
+    if (config.email && config.email.user && config.email.pass && config.email.user !== 'your-email@gmail.com' && config.email.user !== 'your-gmail-app-password-here') {
       emailTransporter = nodemailer.createTransport({
         service: config.email.service,
         auth: {
