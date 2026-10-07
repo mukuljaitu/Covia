@@ -23,21 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const pending = loadPendingAuth();
 
-  // For phone OTP, check if confirmationResult exists
-  // If not, show error but don't auto-resend to avoid duplicate OTPs
-  if (pending && pending.method === "phone" && !window.confirmationResult) {
-    showError(verifyError, "Session expired. Please go back and request a new OTP.");
-    // Disable the verify button
-    const submitBtn = verifyForm.querySelector('.auth-submit');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Request New OTP";
-      submitBtn.onclick = function() {
-        window.location.href = "signin";
-      };
-    }
-  }
-
   if (pending && pending.displayContact) {
     if (pending.method === "phone") {
       verifyTitle.textContent = "Verify your number";
