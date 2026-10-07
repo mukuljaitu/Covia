@@ -96,13 +96,20 @@ document.addEventListener("DOMContentLoaded", function () {
       const result = await response.json();
 
       if (!response.ok) {
+        // If Supabase is not configured, fall back to base64
+        if (result.error && result.error.includes('not configured')) {
+          console.log('Supabase not configured, using base64 fallback');
+          return imageDataUrl;
+        }
         throw new Error(result.error || 'Failed to upload image');
       }
 
       return result.url;
     } catch (error) {
       console.error('Image upload error:', error);
-      throw error;
+      // Fallback to base64 if upload fails
+      console.log('Falling back to base64 storage');
+      return imageDataUrl;
     }
   }
 

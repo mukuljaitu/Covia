@@ -5,9 +5,6 @@ const admin = require('firebase-admin');
 const path = require('path');
 const config = require('./config');
 const nodemailer = require('nodemailer');
-const { createClient } = require('@supabase/supabase-js');
-const multer = require('multer');
-const fs = require('fs');
 
 // Initialize Firebase Admin with error handling
 let firebaseInitialized = false;
@@ -45,17 +42,28 @@ const dbConfig = {
 // Create MySQL connection pool
 const pool = mysql.createPool(dbConfig);
 
-// Initialize Supabase client
+// Initialize Supabase client - make it optional
 let supabase = null;
+let createClient = null;
+
 try {
-  if (config.supabase && config.supabase.url && config.supabase.key) {
-    supabase = createClient(config.supabase.url, config.supabase.key);
-    console.log('✅ Supabase client initialized');
-  } else {
-    console.log('⚠️  Supabase not configured - image upload will be disabled');
-  }
+  createClient = require('@supabase/supabase-js');
 } catch (error) {
-  console.error('⚠️  Supabase initialization failed:', error.message);
+  console.log('⚠️  @supabase/supabase-js not installed - image upload will be disabled');
+}
+
+if (createClient) {
+  try {
+    if (config.supabase && config.supabase.url && config.supabase.key) {
+      supabase = createClient(config.supabase.url, config.supabase.key);
+      console.log('✅ Supabase client initialized');
+    } else {
+      console.log('⚠️  Supabase not configured - image upload will be disabled');
+    }
+  } catch (error) {
+    console.error('⚠️  Supabase initialization failed:', error.message);
+    console.log('⚠️  Image upload will be disabled');
+  }
 }
 
 // In-memory OTP storage (use Redis in production)
