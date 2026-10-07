@@ -42,6 +42,19 @@ const dbConfig = {
 // Create MySQL connection pool
 const pool = mysql.createPool(dbConfig);
 
+// Test database connection asynchronously to avoid blocking startup
+setImmediate(() => {
+  pool.getConnection()
+    .then(connection => {
+      console.log('✅ Connected to MySQL database');
+      connection.release();
+    })
+    .catch(err => {
+      console.error('⚠️  Database connection failed:', err.message);
+      console.log('⚠️  Server will continue running but database features will be disabled');
+    });
+});
+
 // Initialize Supabase client - make it optional
 let supabase = null;
 let createClient = null;
@@ -53,17 +66,20 @@ try {
 }
 
 if (createClient) {
-  try {
-    if (config.supabase && config.supabase.url && config.supabase.key) {
-      supabase = createClient(config.supabase.url, config.supabase.key);
-      console.log('✅ Supabase client initialized');
-    } else {
-      console.log('⚠️  Supabase not configured - image upload will be disabled');
+  // Initialize Supabase asynchronously to avoid blocking startup
+  setImmediate(() => {
+    try {
+      if (config.supabase && config.supabase.url && config.supabase.key) {
+        supabase = createClient(config.supabase.url, config.supabase.key);
+        console.log('✅ Supabase client initialized');
+      } else {
+        console.log('⚠️  Supabase not configured - image upload will be disabled');
+      }
+    } catch (error) {
+      console.error('⚠️  Supabase initialization failed:', error.message);
+      console.log('⚠️  Image upload will be disabled');
     }
-  } catch (error) {
-    console.error('⚠️  Supabase initialization failed:', error.message);
-    console.log('⚠️  Image upload will be disabled');
-  }
+  });
 }
 
 // In-memory OTP storage (use Redis in production)
@@ -74,40 +90,42 @@ function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Email transporter setup
+// Email transporter setup - make it non-blocking
 let emailTransporter = null;
+let nodemailer = null;
+
 try {
-  // Only initialize if email config is properly set
-  if (config.email && config.email.user && config.email.pass &&
-      config.email.user !== 'your-email@gmail.com' &&
-      config.email.pass !== 'your-gmail-app-password-here' &&
-      config.email.pass !== 'your-app-password') {
-    emailTransporter = nodemailer.createTransport({
-      service: config.email.service,
-      auth: {
-        user: config.email.user,
-        pass: config.email.pass
-      }
-    });
-    console.log('✅ Email transporter initialized');
-  } else {
-    console.log('⚠️  Email service not configured - email OTP will be disabled');
-  }
+  nodemailer = require('nodemailer');
 } catch (error) {
-  console.error('⚠️  Email transporter initialization failed:', error.message);
-  console.log('⚠️  Email OTP will be disabled');
+  console.log('⚠️  nodemailer not installed - email OTP will be disabled');
 }
 
-// Test database connection
-pool.getConnection()
-  .then(connection => {
-    console.log('✅ Connected to MySQL database');
-    connection.release();
-  })
-  .catch(err => {
-    console.error('⚠️  Database connection failed:', err.message);
-    console.log('⚠️  Server will continue running but database features will be disabled');
+if (nodemailer) {
+  // Initialize email transporter asynchronously to avoid blocking startup
+  setImmediate(() => {
+    try {
+      // Only initialize if email config is properly set
+      if (config.email && config.email.user && config.email.pass &&
+          config.email.user !== 'your-email@gmail.com' &&
+          config.email.pass !== 'your-gmail-app-password-here' &&
+          config.email.pass !== 'your-app-password') {
+        emailTransporter = nodemailer.createTransport({
+          service: config.email.service,
+          auth: {
+            user: config.email.user,
+            pass: config.email.pass
+          }
+        });
+        console.log('✅ Email transporter initialized');
+      } else {
+        console.log('⚠️  Email service not configured - email OTP will be disabled');
+      }
+    } catch (error) {
+      console.error('⚠️  Email transporter initialization failed:', error.message);
+      console.log('⚠️  Email OTP will be disabled');
+    }
   });
+}
 
 // API Routes
 
