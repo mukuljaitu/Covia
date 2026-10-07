@@ -1,31 +1,8 @@
 -- Supabase Setup Script for FlightPool
 -- Run this in your Supabase SQL Editor
 
--- Create storage bucket for profile photos
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('profile-photos', 'profile-photos', true)
-ON CONFLICT (id) DO NOTHING;
-
--- Enable RLS on storage
-ALTER TABLE storage.buckets ENABLE ROW LEVEL SECURITY;
-
--- Allow public read access to profile photos
-CREATE POLICY "Public profile photos are viewable by everyone"
-ON storage.objects FOR SELECT
-TO public
-USING (bucket_id = 'profile-photos');
-
--- Allow authenticated users to upload profile photos
-CREATE POLICY "Users can upload their own profile photos"
-ON storage.objects FOR INSERT
-TO public
-WITH CHECK (bucket_id = 'profile-photos');
-
--- Allow users to update their own profile photos
-CREATE POLICY "Users can update their own profile photos"
-ON storage.objects FOR UPDATE
-TO public
-WITH CHECK (bucket_id = 'profile-photos');
+-- Note: Storage bucket should be created manually in Supabase Dashboard
+-- Go to: Storage -> Create a new bucket -> Name: "profile-photos" -> Make Public
 
 -- Create users table (if it doesn't exist)
 CREATE TABLE IF NOT EXISTS users (
@@ -76,7 +53,17 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create trigger to automatically update updated_at
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
 CREATE TRIGGER update_users_updated_at
 BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
+
+-- Storage policies (run after creating bucket manually)
+-- These policies should be set in Supabase Dashboard -> Storage -> profile-photos -> Policies
+
+-- For storage bucket, you can set these policies in the UI:
+-- 1. Go to Storage -> profile-photos
+-- 2. Click "New Policy"
+-- 3. For reading: Allow public access (GET)
+-- 4. For uploading: Allow authenticated users (INSERT)
