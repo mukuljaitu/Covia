@@ -23,37 +23,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const pending = loadPendingAuth();
 
-  // For phone OTP, automatically re-send OTP if confirmationResult is lost
+  // For phone OTP, check if confirmationResult exists
+  // If not, show error but don't auto-resend to avoid duplicate OTPs
   if (pending && pending.method === "phone" && !window.confirmationResult) {
-    showError(verifyError, "Resending OTP...");
-    autoResendPhoneOTP(pending.contact);
-  }
-
-  async function autoResendPhoneOTP(phoneNumber) {
-    try {
-      const auth = window.firebaseAuth;
-      if (!auth) {
-        throw new Error("Firebase Auth not initialized");
-      }
-
-      // Initialize reCAPTCHA verifier
-      if (!window.firebaseRecaptchaVerifier) {
-        window.firebaseRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-          'size': 'invisible'
-        });
-        await window.firebaseRecaptchaVerifier.render();
-      }
-
-      // Re-send OTP
-      const confirmationResult = await auth.signInWithPhoneNumber(phoneNumber, window.firebaseRecaptchaVerifier);
-      window.confirmationResult = confirmationResult;
-
-      console.log("OTP resent successfully");
-      showError(verifyError, "");
-      startCountdown();
-    } catch (error) {
-      console.error("Failed to auto-resend OTP:", error);
-      showError(verifyError, "Failed to resend OTP. Please go back and try again.");
+    showError(verifyError, "Session expired. Please go back and request a new OTP.");
+    // Disable the verify button
+    const submitBtn = verifyForm.querySelector('.auth-submit');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Request New OTP";
+      submitBtn.onclick = function() {
+        window.location.href = "signin";
+      };
     }
   }
 

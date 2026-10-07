@@ -4,6 +4,7 @@ const mysql = require('mysql2/promise');
 const admin = require('firebase-admin');
 const path = require('path');
 const config = require('./config');
+const nodemailer = require('nodemailer');
 
 // Initialize Firebase Admin with error handling
 let firebaseInitialized = false;
@@ -49,35 +50,28 @@ function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Email transporter setup - make nodemailer optional
+// Email transporter setup
 let emailTransporter = null;
-let nodemailer = null;
-
 try {
-  nodemailer = require('nodemailer');
-} catch (error) {
-  console.log('⚠️  nodemailer not installed - email OTP will be disabled');
-}
-
-if (nodemailer) {
-  try {
-    // Only initialize if email config is properly set
-    if (config.email && config.email.user && config.email.pass && config.email.user !== 'your-email@gmail.com' && config.email.user !== 'your-gmail-app-password-here') {
-      emailTransporter = nodemailer.createTransport({
-        service: config.email.service,
-        auth: {
-          user: config.email.user,
-          pass: config.email.pass
-        }
-      });
-      console.log('✅ Email transporter initialized');
-    } else {
-      console.log('⚠️  Email service not configured - email OTP will be disabled');
-    }
-  } catch (error) {
-    console.error('⚠️  Email transporter initialization failed:', error.message);
-    console.log('⚠️  Email OTP will be disabled');
+  // Only initialize if email config is properly set
+  if (config.email && config.email.user && config.email.pass &&
+      config.email.user !== 'your-email@gmail.com' &&
+      config.email.pass !== 'your-gmail-app-password-here' &&
+      config.email.pass !== 'your-app-password') {
+    emailTransporter = nodemailer.createTransport({
+      service: config.email.service,
+      auth: {
+        user: config.email.user,
+        pass: config.email.pass
+      }
+    });
+    console.log('✅ Email transporter initialized');
+  } else {
+    console.log('⚠️  Email service not configured - email OTP will be disabled');
   }
+} catch (error) {
+  console.error('⚠️  Email transporter initialization failed:', error.message);
+  console.log('⚠️  Email OTP will be disabled');
 }
 
 // Test database connection
