@@ -70,6 +70,42 @@ document.addEventListener("DOMContentLoaded", function () {
     showError(profileError, "");
   });
 
+  async function uploadImageToSupabase(imageDataUrl) {
+    try {
+      // Extract the base64 data
+      const matches = imageDataUrl.match(/^data:(.+);base64,(.+)$/);
+      if (!matches) {
+        throw new Error('Invalid image data');
+      }
+
+      const contentType = matches[1];
+      const base64Data = matches[2];
+
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageData: imageDataUrl,
+          fileName: 'profile.jpg',
+          contentType: contentType
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to upload image');
+      }
+
+      return result.url;
+    } catch (error) {
+      console.error('Image upload error:', error);
+      throw error;
+    }
+  }
+
   async function syncUserWithBackend(uid, idToken, userData) {
     try {
       // Use relative URL - will work with any domain
@@ -91,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const result = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(result.error || 'Failed to sync user');
       }
@@ -148,6 +184,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || '';
 
+      // Check if user uploaded a custom photo (base64 data URL)
+      let photoUrl = avatarPreview.src;
+      if (avatarPreview.src.startsWith('data:image')) {
+        // Upload to Supabase
+        showError(profileError, "Uploading photo...");
+        photoUrl = await uploadImageToSupabase(avatarPreview.src);
+      }
+
       // Prepare user data
       const userData = {
         firstName: firstName,
@@ -155,10 +199,11 @@ document.addEventListener("DOMContentLoaded", function () {
         email: firebaseUser.email || null,
         phone: firebaseUser.contact || null,
         gender: selectedGender,
-        photoUrl: avatarPreview.src
+        photoUrl: photoUrl
       };
 
       // Sync with backend
+      showError(profileError, "Saving profile...");
       await syncUserWithBackend(firebaseUser.uid, firebaseUser.idToken, userData);
 
       // Update sessionStorage
@@ -167,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
       profile.firstName = firstName;
       profile.lastName = lastName;
       profile.gender = selectedGender;
-      profile.photoDataUrl = avatarPreview.src;
+      profile.photoDataUrl = photoUrl;
       sessionStorage.setItem("flightpoolUser", JSON.stringify(profile));
 
       window.location.href = "flight";

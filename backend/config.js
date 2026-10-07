@@ -20,7 +20,15 @@ module.exports = {
   email: {
     service: process.env.EMAIL_SERVICE || 'gmail',
     user: process.env.EMAIL_USER || 'mukulgarg334@gmail.com',
-    pass: process.env.EMAIL_PASS || 'your-gmail-app-password-here'
+    pass: process.env.EMAIL_PASS || 'etqd pykm eyle exxa'
+  },
+
+  // Supabase configuration for image storage
+  // Set these as environment variables on Hostinger
+  supabase: {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
+    bucket: process.env.SUPABASE_BUCKET || 'profile-photos'
   },
 
   // Server Port (Hostinger usually provides this via environment variable)

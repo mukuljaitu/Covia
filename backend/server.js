@@ -5,6 +5,9 @@ const admin = require('firebase-admin');
 const path = require('path');
 const config = require('./config');
 const nodemailer = require('nodemailer');
+const { createClient } = require('@supabase/supabase-js');
+const multer = require('multer');
+const fs = require('fs');
 
 // Initialize Firebase Admin with error handling
 let firebaseInitialized = false;
@@ -41,6 +44,19 @@ const dbConfig = {
 
 // Create MySQL connection pool
 const pool = mysql.createPool(dbConfig);
+
+// Initialize Supabase client
+let supabase = null;
+try {
+  if (config.supabase && config.supabase.url && config.supabase.key) {
+    supabase = createClient(config.supabase.url, config.supabase.key);
+    console.log('✅ Supabase client initialized');
+  } else {
+    console.log('⚠️  Supabase not configured - image upload will be disabled');
+  }
+} catch (error) {
+  console.error('⚠️  Supabase initialization failed:', error.message);
+}
 
 // In-memory OTP storage (use Redis in production)
 const otpStore = new Map();
@@ -119,7 +135,7 @@ app.post('/api/auth/verify-token', async (req, res) => {
 // Sync Firebase user with MySQL database
 app.post('/api/users/sync', async (req, res) => {
   const connection = await pool.getConnection();
-  
+
   try {
     const { uid, email, phone, firstName, lastName, gender, photoUrl } = req.body;
 
@@ -136,11 +152,11 @@ app.post('/api/users/sync', async (req, res) => {
     if (existingUsers.length > 0) {
       // Update existing user
       await connection.query(
-        `UPDATE users SET 
-          first_name = ?, 
-          last_name = ?, 
-          email = ?, 
-          phone_number = ?, 
+        `UPDATE users SET
+          first_name = ?,
+          last_name = ?,
+          email = ?,
+          phone_number = ?,
           gender = ?,
           photo_url = ?,
           updated_at = NOW()
@@ -156,7 +172,7 @@ app.post('/api/users/sync', async (req, res) => {
     } else {
       // Create new user
       const [result] = await connection.query(
-        `INSERT INTO users 
+        `INSERT INTO users
           (firebase_uid, first_name, last_name, email, phone_number, gender, photo_url, is_active, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())`,
         [uid, firstName || '', lastName || '', email || null, phone || null, gender || null, photoUrl || null]
@@ -215,8 +231,59 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     firebase: firebaseInitialized ? 'connected' : 'disabled',
     mysql: 'connected',
-    email: emailTransporter ? 'connected' : 'disabled'
+    email: emailTransporter ? 'connected' : 'disabled',
+    supabase: supabase ? 'connected' : 'disabled'
   });
+});
+
+// Upload image to Supabase
+app.post('/api/upload/image', async (req, res) => {
+  if (!supabase) {
+    return res.status(503).json({ error: 'Supabase not configured' });
+  }
+
+  try {
+    const { imageData, fileName, contentType } = req.body;
+
+    if (!imageData || !fileName) {
+      return res.status(400).json({ error: 'Image data and file name are required' });
+    }
+
+    // Convert base64 to buffer
+    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(base64Data, 'base64');
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const uniqueFileName = `${timestamp}_${fileName}`;
+
+    // Upload to Supabase Storage
+    const { data, error } = await supabase.storage
+      .from(config.supabase.bucket)
+      .upload(uniqueFileName, buffer, {
+        contentType: contentType || 'image/jpeg',
+        upsert: true
+      });
+
+    if (error) {
+      console.error('Supabase upload error:', error);
+      return res.status(500).json({ error: 'Failed to upload image to Supabase' });
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from(config.supabase.bucket)
+      .getPublicUrl(uniqueFileName);
+
+    res.json({
+      success: true,
+      url: publicUrl,
+      path: uniqueFileName
+    });
+  } catch (error) {
+    console.error('Image upload error:', error);
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
 });
 
 // Send Email OTP
