@@ -114,7 +114,7 @@ async function sendEmailOTP(email) {
     return true;
   } catch (error) {
     console.error("Email OTP error:", error);
-    throw error;
+    throw new Error("Email OTP is temporarily unavailable. Please use phone number for now.");
   }
 }
 
