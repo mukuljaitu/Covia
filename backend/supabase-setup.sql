@@ -35,13 +35,13 @@ USING (true);
 CREATE POLICY "Users can insert their own profile"
 ON users FOR INSERT
 TO public
-WITH CHECK (firebase_uid = auth.uid());
+WITH CHECK (firebase_uid::text = auth.uid()::text);
 
 -- Allow users to update their own profile
 CREATE POLICY "Users can update their own profile"
 ON users FOR UPDATE
 TO public
-USING (firebase_uid = auth.uid());
+USING (firebase_uid::text = auth.uid()::text);
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
